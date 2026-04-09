@@ -1,0 +1,22 @@
+# Compilación y binarios
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Archivos de Eclipse
+.settings/
+.project
+.classpath
+bin/
+.metadata/
+
+# Archivos de IntelliJ / VS Code
+.idea/
+*.iml
+.vscode/
+
+# Logs y temporales
+*.log
+temp/
