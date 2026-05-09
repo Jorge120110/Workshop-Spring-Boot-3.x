@@ -1,32 +1,25 @@
 package com.ejemplo.demo.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.ejemplo.demo.api.contract.SimulacionesApi;
+import com.ejemplo.demo.api.contract.WorkshopApi;
 import com.ejemplo.demo.api.dto.SaludoResponse;
+import com.ejemplo.demo.api.dto.WorkshopHealthResponse;
 import com.ejemplo.demo.domain.service.SaludoService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ejemplo.demo.api.dto.PrestamoRequest;
 import com.ejemplo.demo.api.dto.PrestamoResponse;
 import com.ejemplo.demo.api.dto.SaludoRequest;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-@RestController
-@RequestMapping("/api/v1")
-public class SaludoController {
 
-    @GetMapping
-    public ResponseEntity<Map<String, String>> health() {
-        return ResponseEntity.ok(Map.of(
-                "estado", "ok",
-                "mensaje", "Workshop Spring Boot activo"
-        ));
+@RestController
+public class SaludoController implements WorkshopApi, SimulacionesApi {
+
+    @Override
+    public ResponseEntity<WorkshopHealthResponse> getWorkshopHealth() {
+        return ResponseEntity.ok(new WorkshopHealthResponse("ok", "Workshop Spring Boot activo"));
     }
 
     private final SaludoService saludoService;
@@ -35,22 +28,18 @@ public class SaludoController {
         this.saludoService = saludoService;
     }
 
-    @GetMapping("/saludos")
-    public ResponseEntity<SaludoResponse> saludar(
-            @RequestParam(defaultValue = "Mundo") String nombre
-    ) {
+    @Override
+    public ResponseEntity<SaludoResponse> saludarPorGet(String nombre) {
         return ResponseEntity.ok(saludoService.crearSaludo(nombre));
     }
 
-    @PostMapping("/saludos")
-    public ResponseEntity<SaludoResponse> saludarPost(@Valid @RequestBody SaludoRequest request) {
-        return ResponseEntity.ok(saludoService.crearSaludo(request.nombre()));
+    @Override
+    public ResponseEntity<SaludoResponse> saludarPorPost(@Valid SaludoRequest saludoRequest) {
+        return ResponseEntity.ok(saludoService.crearSaludo(saludoRequest.nombre()));
     }
 
-    @PostMapping("/prestamos")
-    public ResponseEntity<PrestamoResponse> simularPrestamo(
-            @jakarta.validation.Valid @RequestBody PrestamoRequest request
-    ) {
-        return ResponseEntity.ok(saludoService.calcularPrestamo(request));
+    @Override
+    public ResponseEntity<PrestamoResponse> simularPrestamo(@Valid PrestamoRequest prestamoRequest) {
+        return ResponseEntity.ok(saludoService.calcularPrestamo(prestamoRequest));
     }
 }

@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 
 public record PrestamoResponse(
     BigDecimal cuotaMensual,
-    BigDecimal totalIntereses,
-    BigDecimal totalAPagar
+    BigDecimal interesTotal,
+    BigDecimal totalPagar
 ) {}

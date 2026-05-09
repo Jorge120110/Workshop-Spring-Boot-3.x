@@ -21,6 +21,14 @@ public class CategoriaService {
     @Transactional
     public Categoria guardar(Categoria c) { return repository.save(c); }
 
+    @Transactional
+    public Categoria actualizar(Long id, Categoria datos) {
+        Categoria categoria = buscarPorId(id);
+        categoria.setNombre(datos.getNombre());
+        categoria.setDescripcion(datos.getDescripcion());
+        return repository.save(categoria);
+    }
+
     @Transactional(readOnly = true)
     public Categoria buscarPorId(Long id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));

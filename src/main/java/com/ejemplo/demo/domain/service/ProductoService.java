@@ -20,10 +20,24 @@ public class ProductoService {
     @Transactional(readOnly = true)
     public List<Producto> listarTodos() { return repository.findAll(); }
 
+    @Transactional(readOnly = true)
+    public Producto buscarPorId(Long id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+    }
+
     @Transactional
     public Producto guardar(Producto p, Long categoriaId) {
         p.setCategoria(categoriaService.buscarPorId(categoriaId));
         return repository.save(p);
+    }
+
+    @Transactional
+    public Producto actualizar(Long id, Producto datos, Long categoriaId) {
+        Producto producto = buscarPorId(id);
+        producto.setNombre(datos.getNombre());
+        producto.setPrecio(datos.getPrecio());
+        producto.setCategoria(categoriaService.buscarPorId(categoriaId));
+        return repository.save(producto);
     }
 
     @Transactional

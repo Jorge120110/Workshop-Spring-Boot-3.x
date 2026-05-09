@@ -82,10 +82,30 @@ class SaludoControllerTest {
             }
             """;
 
-        mockMvc.perform(post("/api/v1/prestamos")
+        mockMvc.perform(post("/api/v1/simulaciones/prestamo")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonPrestamo))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.cuotaMensual").exists());
+                .andExpect(jsonPath("$.cuotaMensual").exists())
+                .andExpect(jsonPath("$.interesTotal").exists())
+                .andExpect(jsonPath("$.totalPagar").exists());
+    }
+
+    @Test
+    @DisplayName("Debe retornar 400 cuando el prestamo es invalido")
+    void debeRetornarErrorEnPrestamoInvalido() throws Exception {
+        String jsonPrestamoInvalido = """
+            {
+              "monto": 0,
+              "tasaAnual": 10,
+              "meses": 12
+            }
+            """;
+
+        mockMvc.perform(post("/api/v1/simulaciones/prestamo")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonPrestamoInvalido))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("VALIDATION_ERROR"));
     }
 }

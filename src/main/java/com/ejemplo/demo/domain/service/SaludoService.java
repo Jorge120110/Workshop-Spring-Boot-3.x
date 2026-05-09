@@ -26,12 +26,12 @@ public class SaludoService {
       3) Agregar prefijo "Estudiante".
     */
     public String normalizarNombre(String nombre) {
-    	if (nombre.matches(".*\\d.*")) { // Si contiene algún número
-    	    throw new IllegalArgumentException("El nombre no puede contener números");
-    	}
     	if (nombre == null || nombre.isBlank()) {
             return "Invitado";
         }
+    	if (nombre.matches(".*\\d.*")) { // Si contiene algun numero
+    	    throw new IllegalArgumentException("El nombre no puede contener numeros");
+    	}
 
         String[] palabras = nombre.trim().split("\\s+"); // Divide por espacios
         StringBuilder resultado = new StringBuilder();
